@@ -1,6 +1,6 @@
 
 #include "Agenda.h"
-
+#include "UI.h" // ! UI men wad knis
 enum INPUT
 {
     EXIT,
@@ -11,14 +11,6 @@ enum INPUT
     VIDEAR,
     CLEAR
 };
-// #define EXIT 0
-// #define ADD 1
-// #define MODIFIE 2
-// #define DELETE 3
-// #define AFFICHER 4
-// #define VIDEAR 5
-// #define CLEAR 6
-
 
 void Menu(int *MANAGER)
 {
@@ -39,7 +31,6 @@ int main(int argc, char const *argv[])
     List L = NULL;
     while (true)
     {
-        _sleep(2);
         int MANAGER;
         Menu(&MANAGER);
         switch (MANAGER)
@@ -49,38 +40,25 @@ int main(int argc, char const *argv[])
 
             break;
         case ADD:
-            RDV rdv;
-            Scane(&rdv);
-            L = Inserer(rdv, L);
-            test(L);
+        UI_ADD(&L);
+
             break;
         case MODIFIE:
-            int K;
-            printf("\n");
-            Afficher(L);
-            printf("\nWitch one : ");
-            scanf("%d", &K);
-            modifier(L, K);
+        UI_MODIFIE(&L);
+
             break;
         case DELETE:
-            int index;
-            printf("\n");
-            Afficher(L);
-            printf("\n");
-            printf("Witch one you wont to delete >>");
-            scanf("%d", &index);
-            L = Delete(index, L);
+        UI_DELETE(&L);
+
             break;
         case AFFICHER:
-            Afficher(L);
+        UI_AFFICHER(&L);
+
             break;
         case VIDEAR:
-            int log = 0;
-            printf("are you sure [0 for no | any thing for yes]");
-            scanf("%d", &log);
-            if (log)
-                Vider(&L);
-                break;
+            UI_VIDEAR(&L);
+
+            break;
         case CLEAR:
             system("cls");
             break;
