@@ -8,6 +8,7 @@ enum INPUT
     MODIFIE,
     DELETE,
     AFFICHER,
+    AFFICHER_IN_THE_DATE,
     VIDEAR,
     CLEAR
 };
@@ -20,6 +21,7 @@ void Menu(int *MANAGER)
     printf("\n\t%d) MODIFIE", MODIFIE);
     printf("\n\t%d) DELETE", DELETE);
     printf("\n\t%d) AFFICHER", AFFICHER);
+    printf("\n\t%d) AFFICHER_IN_THE_DATE", AFFICHER_IN_THE_DATE);
     printf("\n\t%d) VIDEAR", VIDEAR);
     printf("\n\t%d) CLEAR", CLEAR);
     printf("\n >> ");
@@ -40,19 +42,20 @@ int main(int argc, char const *argv[])
 
             break;
         case ADD:
-        UI_ADD(&L);
-
+            UI_ADD(&L);
             break;
         case MODIFIE:
-        UI_MODIFIE(&L);
+            UI_MODIFIE(&L);
 
             break;
         case DELETE:
-        UI_DELETE(&L);
+            UI_DELETE(&L);
 
             break;
         case AFFICHER:
-        UI_AFFICHER(&L);
+            UI_AFFICHER(&L);
+        case AFFICHER_IN_THE_DATE:
+            UI_AFFICHER_IN_THE_DATE(&L);
 
             break;
         case VIDEAR:
@@ -70,3 +73,5 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
+
+ 

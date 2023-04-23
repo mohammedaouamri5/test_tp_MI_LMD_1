@@ -5,10 +5,7 @@
 
 const int _30[4] = {4, 6, 9, 11};
 
-void Get_String(char *string)
-{
-    scanf("%s", string);
-}
+// ?  testting the input
 
 int Date_Test(const Date date)
 {
@@ -48,9 +45,12 @@ int Date_Test(const Date date)
         printf("\033[1A\033[2K");
         printf("\033[1A\033[2K");
         printf("\033[1A\033[2K");
-        printf("\033[1;31m! the JJ is wrong  we dont have a day number %d in feb%d\033[0m",
-               date.JJ, date.AAAA);
+        printf("\033[1;31m! the JJ is wrong  we dont have a day number %d in feb%d  \033[0m", date.JJ, date.AAAA);
         return 1;
+
+        // printf("\033[1;31m! the JJ is wrong  we dont have a day number %d in feb%d\033[0m",
+        //        date.JJ, date.AAAA);
+        // return 1;
     }
 
     for (int i = 0; i < 4; i++)
@@ -78,7 +78,7 @@ int Temp_Test(const Tempe temp)
                temp.Heur);
         return 1;
     }
-    if (temp.Min > 60 ||
+    if (temp.Min >= 60 ||
         temp.Min < 0)
     {
         printf("\033[1A\033[2K");
@@ -109,22 +109,24 @@ int Duration_test(const Duration duration)
     return 0;
 }
 
+// ? time
+
 int To_min(Tempe tempe)
 {
     return tempe.Min + tempe.Heur * 60;
 }
-
 int Includ(int Start, int date, int End)
 {
     return Start <= date && date <= End;
 }
-
 int Date_Comper(Date a, Date b)
 {
     return a.AAAA == b.AAAA &&
            a.MM == b.MM &&
            a.JJ == b.JJ;
 }
+
+// ! scaning
 
 void Scane_Date(Date *date)
 {
@@ -180,6 +182,7 @@ void Scane(RDV *Val)
     gets(Val->Desc);
 }
 
+// ! print RDV
 void Print(RDV Val)
 {
     printf("\n________________________\n");
@@ -194,6 +197,39 @@ void Print(RDV Val)
     printf("%s", Val.Desc);
 }
 
+/*
+ * full-potion_serche fonctuion trajer 3ounbsour ra9m index men
+ * lista fi me w neud li 9ablou fi Befor
+ */
+
+void Full_Position_Serch(int index, List L, List *Befor, List *Me)
+{
+    if (index > 0 && L)
+    {
+        (*Me) = L;
+        (*Befor) = NULL;
+        while ((*Me))
+        {
+            if (index == 1)
+            {
+                if (!(*Me))
+                    (*Befor) = *Me;
+                return;
+            }
+            index--;
+            printf("%d", ((*Me)) != NULL);
+            (*Befor) = *Me;
+            (*Me) = (*Me)->Suiv;
+            printf("%d", ((*Me)) != NULL);
+        }
+    }
+    else
+    {
+        (*Me) = NULL;
+        (*Befor) = NULL;
+    }
+}
+
 List Inserer(RDV rdv, List L)
 {
 
@@ -201,6 +237,7 @@ List Inserer(RDV rdv, List L)
     P = (noeud *)malloc(sizeof(noeud));
     P->Val = rdv;
     P->Suiv = L;
+    test(L);
     return P;
 }
 
@@ -216,36 +253,56 @@ void Afficher(List L)
 
 List Delete(int index, List L)
 {
-    if (index < 1)
-        return NULL;
+    List Me = NULL;
+    List Befor = NULL;
+    Full_Position_Serch(index, L, &Befor, &Me);
 
-    if (L)
+    // * fnous wele f la5r
+    if (Befor && Me)
     {
-        if (index == 1)
-        {
-            List temp = L->Suiv;
-            free(L);
-            return temp;
-        }
-        else
-        {
-            index--;
-            List Me = L->Suiv;
-            List After = L;
-            while (Me && index != 1)
-            {
-                After = Me;
-                Me = Me->Suiv;
-                index--;
-            }
-            After->Suiv = Me->Suiv;
-            free(Me);
-            return L;
-        }
+        Befor->Suiv = Me->Suiv;
+        free(Me);
     }
     else
     {
-        return NULL;
+        // * f lewl
+        if (Me)
+        {
+
+            List P = NULL;
+            P = Me->Suiv;
+            free(Me);
+            return P;
+        }
+        else
+        {
+        }
+    }
+    printf("\nindex s false\n");
+    return L;
+}
+
+void Afficher_by_date(List L, Date date)
+{
+
+    if (!L)
+    {
+        printf("\nthe list is empty");
+        return;
+    }
+    int log = 0;
+    for (List I = L; I != NULL; I = I->Suiv)
+    {
+        if (Date_Comper(I->Val.date, date))
+        {
+            Print(I->Val);
+            log++;
+        }
+    }
+
+    if (!log)
+    {
+        printf("\nthe date is empty");
     }
 }
 
@@ -257,35 +314,46 @@ testing:
     printf_s("\nTESTING...\n");
 
     for (List I = L; I != NULL; I = I->Suiv)
-    {
-        // if (I->Suiv != NULL)
         for (List J = I->Suiv; J != NULL; J = J->Suiv)
-        {
             if (Date_Comper(I->Val.date, J->Val.date))
-            {
-                if (Includ(To_min(I->Val.duration.Debut), To_min(J->Val.duration.Debut), To_min(I->Val.duration.Fin)) ||
-                    Includ(To_min(I->Val.duration.Debut), To_min(J->Val.duration.Fin), To_min(I->Val.duration.Fin)))
+                if (Includ(To_min(I->Val.duration.Debut),
+                           To_min(J->Val.duration.Debut),
+                           To_min(I->Val.duration.Fin)) ||
+                    Includ(To_min(I->Val.duration.Debut),
+                           To_min(J->Val.duration.Fin),
+                           To_min(I->Val.duration.Fin)))
                 {
                     cheng += 1;
                     printf("\nthere is a conflect:");
-                    printf("\n\tthe RDV %s ->( %d : %d ) # ( %d : %d )", J->Val.Titer, J->Val.duration.Debut.Heur, J->Val.duration.Debut.Min, J->Val.duration.Fin.Heur, J->Val.duration.Fin.Min);
-                    printf("\n\tthe RDV %s ->( %d : %d ) # ( %d : %d )", I->Val.Titer, I->Val.duration.Debut.Heur, I->Val.duration.Debut.Min, I->Val.duration.Fin.Heur, I->Val.duration.Fin.Min);
+                    printf("\n\tthe RDV %s ->( %d : %d ) # ( %d : %d )",
+                           J->Val.Titer,
+                           J->Val.duration.Debut.Heur, J->Val.duration.Debut.Min,
+                           J->Val.duration.Fin.Heur, J->Val.duration.Fin.Min);
+                    printf("\n\tthe RDV %s ->( %d : %d ) # ( %d : %d )",
+                           I->Val.Titer,
+                           I->Val.duration.Debut.Heur, I->Val.duration.Debut.Min,
+                           I->Val.duration.Fin.Heur, I->Val.duration.Fin.Min);
 
-                    printf("\nDo you want chenge the time of %s RDV (1/0)\n", I->Val.Titer);
+                    printf("\nDo you want change the time of %s RDV (1/0)\n", I->Val.Titer);
                     int log;
                     printf(">> ");
                     scanf("%d", &log);
                     if (log)
                     {
+                        int type = 0;
+                        printf("Ok do you want to change the dat or the duration ");
+                        printf("[0 for date | any number for duration ] \n >>");
+                        scanf("%d", &type);
+                        if (type)
+                            Scane_Duration(&I->Val.duration);
+                        else
+                            Scane_Date(&I->Val.date);
 
-                        Scane_Duration(&I->Val.duration);
                         cheng -= 1;
                         goto testing;
                     }
                 }
-            }
-        }
-    }
+
     if (cheng)
     {
         cheng = 0;
@@ -296,28 +364,19 @@ testing:
 
 void modifier(List L, int index)
 {
-    if (index >= 1)
+    List Me = NULL;
+    List Befor = NULL;
+    Full_Position_Serch(index, L, &Befor, &Me);
+    if (Me)
     {
-        List fortest = L;
-        while (L && index != 1)
-        {
-            if (L->Suiv)
-            {
-                L = L->Suiv;
-                break;
-            }
-            index--;
-        }
-        if (index == 1)
-        {
-            printf("\nGo modifier %s RDV :\n", L->Val.Titer);
-            Scane(&L->Val);
-            test(fortest);
-        }
-        else
-        {
-            printf("{You dont have that much of RDV}");
-        }
+
+        printf("\nGo modifier %s RDV :\n", Me->Val.Titer);
+        Scane(&Me->Val);
+        test(L);
+    }
+    else
+    {
+        printf("{You dont have that much of RDV}");
     }
 }
 

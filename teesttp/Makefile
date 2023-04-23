@@ -4,3 +4,4 @@ all :
 	Output/main.exe
 	del *.o
 
+# gcc main.c -o main.exe

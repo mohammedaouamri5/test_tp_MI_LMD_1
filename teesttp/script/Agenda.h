@@ -58,4 +58,5 @@ List Delete( int index, List L);
 void test(List L);
 void modifier(List L  , int index);
 void Vider(List *L);
+void Afficher_by_date(List L, Date date);
 #endif
